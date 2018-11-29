@@ -1,78 +1,125 @@
-import React from "react";
+import React, { Component } from "react";
 import ReactDOM from "react-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  NavLink
+} from "react-router-dom";
 
 import "./styles.css";
 
-function Home({ p, alertHandler }) {
-  return (
-    <div className="Home">
-      <p onClick={e => alertHandler(e.target.innerText)}>Home: {p}</p>
-      <input
-        type="text"
-        name="input text"
-        placeholder="enter you value"
-        onChange={e => alertHandler(e.target.value)}
-      />
-      <hr />
-    </div>
-  );
-}
+const Form = props => {
+  let { name, email, pass, emailstatus } = props.form;
 
-const Dream = ({ p }) => {
   return (
-    <div>
-      <p>Dream: {p}</p>
-    </div>
-  );
-};
-
-const Users = ({ users, indexHandler }) => {
-  return (
-    <div className="card users">
-      {users.map(user => {
-        return (
-          <div className="d-flex">
-            <p onClick={() => indexHandler(user.id)}>{user.name}</p>
-            <p> ... {user.id}</p>
-          </div>
-        );
-      })}
+    <div className="card mb-4">
+      <div className="form-group">
+        <input
+          type="text"
+          placeholder="enter Name"
+          className="form-control mb-2"
+          value={name}
+        />
+        <input
+          type="text"
+          placeholder="enter Email"
+          className="form-control mb-2"
+          value={email}
+        />
+        {emailstatus ? (
+          <input
+            type="text"
+            placeholder="enter Password"
+            className="form-control mb-2"
+            value={pass}
+          />
+        ) : null}
+        <button className="btn btn-primary">Submit</button>
+      </div>
     </div>
   );
 };
 
-class App extends React.Component {
+class Qr extends Component {
   state = {
-    p: "hey , this is paragraph text",
-    users: [
-      { id: 1, name: "rashed" },
-      { id: 2, name: "boss" },
-      { id: 3, name: "king" },
-      { id: 4, name: "rabin" }
-    ]
+    form: {
+      name: "",
+      email: ""
+    }
   };
-
-  indexHandler = id => {
-    let name = this.state.users.findIndex(user => user.id === id);
-    let myname = this.state.users[name].name;
-    alert("my Name is: " + myname + " | AND My ID is: " + id);
-  };
-
-  alertHandler(name) {
-    console.log(name);
-    // alert('hello, i am' + e.target.value)
-  }
   render() {
+    let { form } = this.state;
+
     return (
       <div>
-        <p style={{ backgroundColor: "blue", color: "#fff" }}>header</p>
-        <Home alertHandler={this.alertHandler.bind(this)} p={this.state.p} />
-        <Dream p={this.state.p} />
-        <Users
-          users={this.state.users}
-          indexHandler={this.indexHandler.bind(this)}
-        />
-        <p style={{ backgroundColor: "red", color: "#fff" }}>footer</p>
+        <h4>QR:</h4>
+        <Form form={form} />
+      </div>
+    );
+  }
+}
+
+class Email extends Component {
+  state = {
+    form: {
+      name: "",
+      email: "",
+      pass: "",
+      emailstatus: true
+    }
+  };
+
+  render() {
+    let { form } = this.state;
+
+    return (
+      <div>
+        <h4>Email:</h4>
+        <Form form={form} />
+      </div>
+    );
+  }
+}
+
+const Nav = () => {
+  return (
+    <ul className="breadcrumb">
+      <li className="breadcrumb-item">
+        <NavLink to="/qr">Qr</NavLink>
+      </li>
+      <li className="breadcrumb-item">
+        <NavLink to="/email">Email</NavLink>
+      </li>
+      <li className="breadcrumb-item">
+        <NavLink to="/emaildhgdjf">404</NavLink>
+      </li>
+    </ul>
+  );
+};
+
+const Error = () => <h2>file not found</h2>;
+
+class App extends Component {
+  state = [
+    { name: "rashed" },
+    { email: "fdfkjh@figk.com" },
+    { pass: "djgdfjk" }
+  ];
+  render() {
+    return (
+      <div className="m-4">
+        <Router>
+          <div>
+            <Nav />
+            <Switch>
+              <Route exact path="/" component={Qr} />
+              <Route path="/qr" component={Qr} />
+              <Route path="/email" component={Email} />
+              <Route exact component={Error} />
+            </Switch>
+          </div>
+        </Router>
       </div>
     );
   }

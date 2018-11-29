@@ -10,5 +10,7 @@
   background: #f9f9f9;
   border: 1px solid #ddd;
 }
-.users {
+li {
+  display: inline-block;
+  margin-right: 10px;
 }
